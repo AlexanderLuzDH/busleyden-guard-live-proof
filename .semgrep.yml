@@ -1,0 +1,6 @@
+rules:
+  - id: python.lang.security.audit.real-repo-proof
+    message: Real-codebase proof marker
+    severity: INFO
+    languages: [python]
+    pattern: PLATONIC_REAL_REPO_PROOF = 43

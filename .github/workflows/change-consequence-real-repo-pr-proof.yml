@@ -1,0 +1,69 @@
+name: change-consequence-real-repo-pr-proof
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+  workflow_dispatch:
+permissions:
+  contents: read
+  issues: write
+  pull-requests: write
+jobs:
+  prove-real-pr:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - uses: actions/setup-go@v5
+        with:
+          go-version: "1.24"
+      - name: Install scanners
+        run: |
+          python -m pip install semgrep
+          go install github.com/google/osv-scanner/v2/cmd/osv-scanner@latest
+          echo "$HOME/go/bin" >> "$GITHUB_PATH"
+      - name: Run Semgrep
+        run: |
+          mkdir -p notes
+          semgrep scan --config .semgrep.yml --json --json-output notes/semgrep_report.json . || true
+          python -m json.tool notes/semgrep_report.json > /tmp/semgrep.json
+          mv /tmp/semgrep.json notes/semgrep_report.json
+      - name: Run OSV-Scanner
+        run: |
+          mkdir -p notes
+          osv-scanner scan source -r . --format json > notes/osv_report.json || true
+          python -m json.tool notes/osv_report.json > /tmp/osv.json || echo '{"results":[]}' > /tmp/osv.json
+          mv /tmp/osv.json notes/osv_report.json
+      - id: consequence
+        uses: ./.github/actions/change-consequence
+        with:
+          base: ${{ github.event.pull_request.base.sha || '' }}
+          head: ${{ github.event.pull_request.head.sha || '' }}
+          output: change-consequence.json
+          comment-output: change-consequence.md
+          comment-pr: ${{ github.event_name == 'pull_request' }}
+          hosted-trace-report: notes/github_upstream_pytest_runtime_trace_fanout_proof_report.json
+          revolutionary-gate: notes/revolutionary_result_gate_report.json
+          action-proof: notes/github_change_consequence_action_proof_report.json
+          pr-proof: notes/github_change_consequence_pr_proof_report.json
+          semgrep-report: notes/semgrep_report.json
+          osv-report: notes/osv_report.json
+      - name: Validate real-repo PR certificate
+        env:
+          PR_NUMBER: ${{ github.event.pull_request.number || '' }}
+          ACTION_CERTIFICATE_ID: ${{ steps.consequence.outputs.certificate-id }}
+          ACTION_CONTENT_ADDRESS: ${{ steps.consequence.outputs.content-address }}
+          ACTION_POLICY_STATUS: ${{ steps.consequence.outputs.policy-status }}
+        run: python verify_change_consequence_real_repo_pr.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: change-consequence-real-repo-pr-certificate
+          path: |
+            change-consequence.json
+            change-consequence.md
+            notes/semgrep_report.json
+            notes/osv_report.json

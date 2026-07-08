@@ -1,0 +1,128 @@
+{
+  "claim_boundary": "Passing proves the consequence certificate runs in a real GitHub pull_request workflow and posts a PR comment. It still does not prove paid demand or customer production adoption.",
+  "digest_verified": true,
+  "external_payload": {
+    "affected_tests": [
+      "tests/test_thing.py"
+    ],
+    "certificate_id": "FE83FFBBF9A95F7CE61DB6BE57C5C342F639D51B19859B1B1DDB6DD254AFF8E3",
+    "changed_files": [
+      "src/thing.py"
+    ],
+    "comment_headline_present": true,
+    "content_address": "sha256:fe83ffbbf9a95f7ce61db6be57c5c342f639d51b19859b1b1ddb6dd254aff8e3",
+    "formal_owner_file_count": 1,
+    "github_change_consequence_pr_gate": true,
+    "hosted_action_workflow_url": "https://github.com/AlexanderLuzDH/platonic-change-consequence-action-proof-20260708142848/actions/runs/28950487060",
+    "hosted_trace_speedup": 3821.9354,
+    "kind": "github_change_consequence_pr_payload",
+    "osv_report_path": "notes/osv_report.json",
+    "osv_status": "available",
+    "osv_vulnerability_count": 0,
+    "policy_status": "review_with_unknowns",
+    "pr_number": 1,
+    "semgrep_finding_count": 1,
+    "semgrep_report_path": "notes/semgrep_report.json",
+    "semgrep_status": "available",
+    "unknown_count": 1
+  },
+  "github_change_consequence_pr_gate": true,
+  "hosted_metrics": {
+    "affected_test_count": 1,
+    "formal_owner_file_count": 1,
+    "hosted_trace_speedup": 3821.9354,
+    "osv_vulnerability_count": 0,
+    "policy_status": "review_with_unknowns",
+    "semgrep_finding_count": 1,
+    "unknown_count": 1
+  },
+  "kind": "github_change_consequence_pr_proof_report",
+  "pr_comment": {
+    "body_contains_certificate": true,
+    "body_contains_tests": true,
+    "body_contains_unknowns": true,
+    "comment_id": 4915970396,
+    "comment_url": "https://github.com/AlexanderLuzDH/platonic-change-consequence-pr-proof-20260708143720/pull/1#issuecomment-4915970396"
+  },
+  "pull_request": {
+    "base_ref": "main",
+    "base_sha": "10cc3553d5333101cf76ccfbd99d60b78fd27017",
+    "changed_files": [
+      "src/thing.py"
+    ],
+    "head_ref": "ai-change-demo",
+    "head_sha": "bbd3aac64fc79a02bf0b1d31952f58f661ccd482",
+    "number": 1,
+    "state": "OPEN",
+    "title": "AI demo change",
+    "url": "https://github.com/AlexanderLuzDH/platonic-change-consequence-pr-proof-20260708143720/pull/1"
+  },
+  "report_id": "74E8ED749013C2D16E923A7A419B6BADD9554230C1360D756F84A50AB9428B8E",
+  "schema_version": 1,
+  "self_criticism": [
+    "The repository and PR are synthetic, although the PR workflow and comment are real GitHub surfaces.",
+    "Semgrep and OSV are executed live in the hosted PR workflow, but the repository is still synthetic.",
+    "This proves comment delivery and artifact generation, not reviewer behavior or saved review time."
+  ],
+  "success_gate": true,
+  "verifier_repo": {
+    "base_commit_sha": "10cc3553d5333101cf76ccfbd99d60b78fd27017",
+    "is_private": false,
+    "local_source_dir": "D:\\Projects\\platonic\\temp\\github-change-consequence-pr-proof\\platonic-change-consequence-pr-proof-20260708143720",
+    "repo_slug": "AlexanderLuzDH/platonic-change-consequence-pr-proof-20260708143720",
+    "repo_url": "https://github.com/AlexanderLuzDH/platonic-change-consequence-pr-proof-20260708143720",
+    "repo_visibility": "PUBLIC",
+    "source_manifest": [
+      {
+        "byte_count": 4023,
+        "copied_sha256": "4F469CF8A1BC14B15535CA83884BB49ED652EAF4848D126F9479977709165FC2",
+        "path": ".github/actions/change-consequence/action.yml",
+        "source_sha256": "4F469CF8A1BC14B15535CA83884BB49ED652EAF4848D126F9479977709165FC2"
+      },
+      {
+        "byte_count": 4072,
+        "copied_sha256": "4264D43E5659606A1EC1651ED891BBB4B93A91F6DFA40209DCF2A909A8728F54",
+        "path": "code/change_consequence_action.py",
+        "source_sha256": "4264D43E5659606A1EC1651ED891BBB4B93A91F6DFA40209DCF2A909A8728F54"
+      },
+      {
+        "byte_count": 36100,
+        "copied_sha256": "1C2B773DAC1B720587939B75A64212132372AA0CF40F89F1A59134E69FA4CA57",
+        "path": "code/change_consequence_certificate.py",
+        "source_sha256": "1C2B773DAC1B720587939B75A64212132372AA0CF40F89F1A59134E69FA4CA57"
+      },
+      {
+        "byte_count": 591,
+        "copied_sha256": "275A77C5A1EC88A18EB0E3F39D448BAFED0C63EAC641F328D9AAA825AF96D370",
+        "path": "code/platonic_core/hashing.py",
+        "source_sha256": "275A77C5A1EC88A18EB0E3F39D448BAFED0C63EAC641F328D9AAA825AF96D370"
+      },
+      {
+        "byte_count": 10427,
+        "copied_sha256": "8EF41D67E07AB0AAB488292FB205394502CDA9AC0847D1B3330C13A9A635C5EA",
+        "path": "notes/github_upstream_pytest_runtime_trace_fanout_proof_report.json",
+        "source_sha256": "8EF41D67E07AB0AAB488292FB205394502CDA9AC0847D1B3330C13A9A635C5EA"
+      },
+      {
+        "byte_count": 71754,
+        "copied_sha256": "9842BFE95D60631C4E72693BF47A4E89DE184972034425F01446D666EE486CE2",
+        "path": "notes/revolutionary_result_gate_report.json",
+        "source_sha256": "9842BFE95D60631C4E72693BF47A4E89DE184972034425F01446D666EE486CE2"
+      },
+      {
+        "byte_count": 4462,
+        "copied_sha256": "7097BC0A22F8947AC2786C1C0262E296FE5ECB9F7AD6FB64E74D0A78FB18E2EA",
+        "path": "notes/github_change_consequence_action_proof_report.json",
+        "source_sha256": "7097BC0A22F8947AC2786C1C0262E296FE5ECB9F7AD6FB64E74D0A78FB18E2EA"
+      }
+    ]
+  },
+  "workflow_run": {
+    "workflow_conclusion": "success",
+    "workflow_event": "pull_request",
+    "workflow_file": "change-consequence-pr-proof.yml",
+    "workflow_name": "change-consequence-pr-proof",
+    "workflow_run_id": 28951123896,
+    "workflow_run_url": "https://github.com/AlexanderLuzDH/platonic-change-consequence-pr-proof-20260708143720/actions/runs/28951123896"
+  }
+}

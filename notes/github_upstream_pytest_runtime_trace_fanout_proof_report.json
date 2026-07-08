@@ -1,0 +1,213 @@
+{
+  "claim_boundary": "Passing proves hosted external execution of trace-mined file-to-upstream-test impact on public Click tests. It does not prove full-suite coverage, independent customer adoption, or production SLOs.",
+  "external_payload": {
+    "claim_boundary": "This hosted runner proof runs upstream-authored Click pytest cases under sys.settrace, mines a file-to-upstream-test impact substrate from raw call events, and verifies 1000x snapshot fanout. It is external execution over upstream tests, not customer telemetry.",
+    "clone": {
+      "elapsed_seconds": 0.564456,
+      "head_commit": "7925a3410d7098c28cfca3b2baa6c852666bbd14",
+      "remote_url": "https://github.com/pallets/click.git"
+    },
+    "external_report_summary": {
+      "all_digest_verified": true,
+      "candidate_generation": {
+        "candidate_count": 5,
+        "generated_runtime_index_candidate_count": 2,
+        "surviving_candidate_count": 3
+      },
+      "fanout_accounting": {
+        "baseline_raw_trace_scan_operations_once": 78420,
+        "low_repeated_raw_trace_scan_operations": 1568400,
+        "low_request_count_per_case": 20,
+        "low_request_speedup": 18.3602,
+        "low_snapshot_once_fanout_operations": 85424,
+        "repeated_raw_trace_scan_operations": 784200000,
+        "request_count_per_case": 10000,
+        "selected_plan_operations_once": 229,
+        "setup_operations_including_discovery_validation_materialization": 84955,
+        "snapshot_fanout_speedup": 3821.9354,
+        "snapshot_once_fanout_operations": 205184
+      },
+      "kind": "upstream_pytest_runtime_trace_fanout_report",
+      "repo_summary": {
+        "execution_surface": "pytest_sys_settrace_call_events",
+        "head_commit": "7925a3410d7098c28cfca3b2baa6c852666bbd14",
+        "remote_url": "https://github.com/pallets/click.git",
+        "repo_root": "/tmp/platonic-upstream-pytest-trace-w1uljttt/external-click",
+        "source_root": "src/click",
+        "target_package": "click",
+        "upstream_test_source": "pallets/click tests"
+      },
+      "selected_substrate": {
+        "anchor_field": "file",
+        "candidate_evaluation_id": "5CF96D1DB545D44A5681ED831A24EB9B00CF7777C3BED868B2E3D34898A48298",
+        "discovery_mode": "runtime_trace_enumerated_index",
+        "heldout_correct": true,
+        "heldout_failure_count": 0,
+        "heldout_failures": [],
+        "materialization_operations": 6535,
+        "output_field": "upstream_test_id",
+        "plan_id": "runtime_trace_index:events.file->events.upstream_test_id",
+        "training_correct": true,
+        "training_failure_count": 0,
+        "training_failures": [],
+        "workload_correct": true,
+        "workload_failure_count": 0,
+        "workload_failures": [],
+        "workload_prediction_operations_once": 229
+      },
+      "snapshot_count": 12,
+      "success_gate": true,
+      "trace_summary": {
+        "runtime_trace_event_count": 6535,
+        "traced_file_count": 12,
+        "upstream_test_count": 24,
+        "upstream_test_ids": [
+          "tests/test_arguments.py::test_argument_help",
+          "tests/test_arguments.py::test_eat_options",
+          "tests/test_arguments.py::test_file_args",
+          "tests/test_arguments.py::test_missing_arg",
+          "tests/test_arguments.py::test_nargs_star",
+          "tests/test_arguments.py::test_nargs_tup",
+          "tests/test_basic.py::test_basic_functionality",
+          "tests/test_basic.py::test_basic_group",
+          "tests/test_basic.py::test_choice_argument",
+          "tests/test_basic.py::test_int_option[args2-Error: Invalid value for '--i': 'x' is not a valid integer.]",
+          "tests/test_basic.py::test_required_option",
+          "tests/test_basic.py::test_string_option[args0-S:[no value]]",
+          "tests/test_commands.py::test_default_maps",
+          "tests/test_commands.py::test_invoked_subcommand",
+          "tests/test_commands.py::test_object_propagation",
+          "tests/test_commands.py::test_other_command_invoke",
+          "tests/test_commands.py::test_unknown_command",
+          "tests/test_defaults.py::test_default_map_source[args1-default_map1-mapped-DEFAULT_MAP]",
+          "tests/test_defaults.py::test_multiple_defaults",
+          "tests/test_testing.py::test_env",
+          "tests/test_testing.py::test_runner",
+          "tests/test_testing.py::test_with_color",
+          "tests/test_types.py::test_choice_get_invalid_choice_message",
+          "tests/test_types.py::test_range[type0-3-3]"
+        ]
+      },
+      "upstream_pytest_runtime_trace_fanout_gate": true,
+      "upstream_pytest_runtime_trace_fanout_id": "CD5ABE4C17E6442914ED1C66AE49397F165A30F8949814A5CABE632EFA04718A",
+      "upstream_test_summary": {
+        "all_selected_tests_passed": true,
+        "executed_upstream_test_count": 24,
+        "failed_upstream_test_count": 0,
+        "failed_upstream_tests": [],
+        "passed_upstream_test_count": 24,
+        "selected_upstream_test_count": 24,
+        "selected_upstream_test_files": [
+          "tests/test_arguments.py",
+          "tests/test_basic.py",
+          "tests/test_commands.py",
+          "tests/test_defaults.py",
+          "tests/test_testing.py",
+          "tests/test_types.py"
+        ],
+        "selected_upstream_test_nodeids": [
+          "tests/test_basic.py::test_basic_functionality",
+          "tests/test_basic.py::test_basic_group",
+          "tests/test_basic.py::test_string_option[args0-S:[no value]]",
+          "tests/test_basic.py::test_int_option[args2-Error: Invalid value for '--i': 'x' is not a valid integer.]",
+          "tests/test_basic.py::test_choice_argument",
+          "tests/test_basic.py::test_required_option",
+          "tests/test_arguments.py::test_nargs_star",
+          "tests/test_arguments.py::test_nargs_tup",
+          "tests/test_arguments.py::test_file_args",
+          "tests/test_arguments.py::test_missing_arg",
+          "tests/test_arguments.py::test_argument_help",
+          "tests/test_arguments.py::test_eat_options",
+          "tests/test_commands.py::test_other_command_invoke",
+          "tests/test_commands.py::test_default_maps",
+          "tests/test_commands.py::test_object_propagation",
+          "tests/test_commands.py::test_invoked_subcommand",
+          "tests/test_commands.py::test_unknown_command",
+          "tests/test_defaults.py::test_multiple_defaults",
+          "tests/test_defaults.py::test_default_map_source[args1-default_map1-mapped-DEFAULT_MAP]",
+          "tests/test_testing.py::test_runner",
+          "tests/test_testing.py::test_with_color",
+          "tests/test_testing.py::test_env",
+          "tests/test_types.py::test_choice_get_invalid_choice_message",
+          "tests/test_types.py::test_range[type0-3-3]"
+        ]
+      }
+    },
+    "github_upstream_pytest_runtime_trace_fanout_gate": true,
+    "kind": "github_upstream_pytest_runtime_trace_fanout_payload",
+    "proof_elapsed_seconds": 1.525295,
+    "runner": {
+      "github_actions": true,
+      "github_repository": "AlexanderLuzDH/platonic-upstream-pytest-runtime-trace-proof-20260708123501",
+      "github_run_attempt": "1",
+      "github_run_id": "28942987562",
+      "github_sha": "456d0be2cef89a57012c409dd874c37cb798099d",
+      "platform": "Linux-6.17.0-1018-azure-x86_64-with-glibc2.39",
+      "python_version": "3.11.15",
+      "runner_arch": "X64",
+      "runner_os": "Linux"
+    },
+    "schema_version": 1,
+    "success_gate": true
+  },
+  "github_upstream_pytest_runtime_trace_fanout_gate": true,
+  "github_upstream_pytest_runtime_trace_fanout_proof_id": "DAB771077CE604D6CF5E0635F524D141453AFE4A47F24FEF0699D1B544BC46AD",
+  "hosted_metrics": {
+    "all_digest_verified": true,
+    "low_request_speedup": 18.3602,
+    "proof_elapsed_seconds": 1.525295,
+    "python_version": "3.11.15",
+    "runner_os": "Linux",
+    "runtime_trace_event_count": 6535,
+    "selected_plan_id": "runtime_trace_index:events.file->events.upstream_test_id",
+    "selected_upstream_test_file_count": 6,
+    "snapshot_count": 12,
+    "snapshot_fanout_speedup": 3821.9354,
+    "traced_file_count": 12,
+    "upstream_test_count": 24
+  },
+  "kind": "github_upstream_pytest_runtime_trace_fanout_proof_report",
+  "schema_version": 1,
+  "self_criticism": [
+    "The hosted proof runs a curated upstream test subset, not the full Click test suite.",
+    "The impact relation is exact for observed trace coverage only; unexecuted code paths remain outside the trace.",
+    "It is external execution over public upstream tests, but still not customer telemetry or revenue."
+  ],
+  "success_gate": true,
+  "verifier_repo": {
+    "is_private": false,
+    "local_source_dir": "D:\\Projects\\platonic\\temp\\github-upstream-pytest-runtime-trace-fanout-proof\\platonic-upstream-pytest-runtime-trace-proof-20260708123501",
+    "repo_slug": "AlexanderLuzDH/platonic-upstream-pytest-runtime-trace-proof-20260708123501",
+    "repo_url": "https://github.com/AlexanderLuzDH/platonic-upstream-pytest-runtime-trace-proof-20260708123501",
+    "repo_visibility": "PUBLIC",
+    "source_manifest": [
+      {
+        "byte_count": 591,
+        "copied_sha256": "275A77C5A1EC88A18EB0E3F39D448BAFED0C63EAC641F328D9AAA825AF96D370",
+        "path": "code/platonic_core/hashing.py",
+        "source_sha256": "275A77C5A1EC88A18EB0E3F39D448BAFED0C63EAC641F328D9AAA825AF96D370"
+      },
+      {
+        "byte_count": 27563,
+        "copied_sha256": "3171A1E341EEC470B54353EBC832B2BCF768C028990C7A21133BBF3440878636",
+        "path": "code/runtime_trace_mined_workflow_fanout.py",
+        "source_sha256": "3171A1E341EEC470B54353EBC832B2BCF768C028990C7A21133BBF3440878636"
+      },
+      {
+        "byte_count": 15752,
+        "copied_sha256": "E8B1A77459FAF252ADB07BB56EF7419DD17774C4CF88F454DF15FB5790D9EC9E",
+        "path": "code/upstream_pytest_runtime_trace_fanout.py",
+        "source_sha256": "E8B1A77459FAF252ADB07BB56EF7419DD17774C4CF88F454DF15FB5790D9EC9E"
+      }
+    ],
+    "verifier_commit_sha": "456d0be2cef89a57012c409dd874c37cb798099d"
+  },
+  "workflow_run": {
+    "workflow_conclusion": "success",
+    "workflow_event": "push",
+    "workflow_file": "upstream-pytest-runtime-trace-fanout.yml",
+    "workflow_name": "upstream-pytest-runtime-trace-fanout-verifier",
+    "workflow_run_id": 28942987562,
+    "workflow_run_url": "https://github.com/AlexanderLuzDH/platonic-upstream-pytest-runtime-trace-proof-20260708123501/actions/runs/28942987562"
+  }
+}

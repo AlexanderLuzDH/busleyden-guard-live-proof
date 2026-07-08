@@ -1,0 +1,110 @@
+name: "AI Change Consequence Certificate"
+description: "Generate a content-addressed consequence certificate for AI-generated pull requests."
+inputs:
+  repo-root:
+    description: "Repository root to analyze."
+    required: false
+    default: "${{ github.workspace }}"
+  changed-files:
+    description: "Optional newline- or comma-separated changed files. Defaults to git status/diff."
+    required: false
+    default: ""
+  base:
+    description: "Optional base ref for git diff."
+    required: false
+    default: ""
+  head:
+    description: "Optional head ref for git diff."
+    required: false
+    default: ""
+  output:
+    description: "Path for the JSON certificate report."
+    required: false
+    default: "change-consequence.json"
+  comment-output:
+    description: "Path for the PR-comment markdown."
+    required: false
+    default: "change-consequence.md"
+  hosted-trace-report:
+    description: "Optional hosted runtime trace proof JSON to attach."
+    required: false
+    default: ""
+  revolutionary-gate:
+    description: "Optional aggregate result gate JSON to attach."
+    required: false
+    default: ""
+  action-proof:
+    description: "Optional hosted GitHub Action proof JSON to attach."
+    required: false
+    default: ""
+  pr-proof:
+    description: "Optional hosted pull-request proof JSON to attach."
+    required: false
+    default: ""
+  semgrep-report:
+    description: "Optional Semgrep JSON or SARIF report to attach."
+    required: false
+    default: ""
+  osv-report:
+    description: "Optional OSV-Scanner JSON report to attach."
+    required: false
+    default: ""
+  github-token:
+    description: "GitHub token used to comment on pull requests."
+    required: false
+    default: "${{ github.token }}"
+  comment-pr:
+    description: "Whether to comment on pull requests."
+    required: false
+    default: "false"
+outputs:
+  certificate-id:
+    description: "Stable certificate digest."
+    value: "${{ steps.generate.outputs.certificate-id }}"
+  content-address:
+    description: "sha256 content address for the certificate."
+    value: "${{ steps.generate.outputs.content-address }}"
+  policy-status:
+    description: "Computed policy status."
+    value: "${{ steps.generate.outputs.policy-status }}"
+  gate:
+    description: "Whether the certificate generation gate passed."
+    value: "${{ steps.generate.outputs.gate }}"
+  report-path:
+    description: "Path to the generated JSON report."
+    value: "${{ steps.generate.outputs.report-path }}"
+  comment-path:
+    description: "Path to the generated markdown PR comment."
+    value: "${{ steps.generate.outputs.comment-path }}"
+  affected-test-count:
+    description: "Number of mapped affected tests."
+    value: "${{ steps.generate.outputs.affected-test-count }}"
+  unknown-count:
+    description: "Number of explicit unknowns."
+    value: "${{ steps.generate.outputs.unknown-count }}"
+runs:
+  using: "composite"
+  steps:
+    - id: generate
+      shell: bash
+      env:
+        INPUT_REPO_ROOT: ${{ inputs.repo-root }}
+        INPUT_CHANGED_FILES: ${{ inputs.changed-files }}
+        INPUT_BASE: ${{ inputs.base }}
+        INPUT_HEAD: ${{ inputs.head }}
+        INPUT_OUTPUT: ${{ inputs.output }}
+        INPUT_COMMENT_OUTPUT: ${{ inputs.comment-output }}
+        INPUT_HOSTED_TRACE_REPORT: ${{ inputs.hosted-trace-report }}
+        INPUT_REVOLUTIONARY_GATE: ${{ inputs.revolutionary-gate }}
+        INPUT_ACTION_PROOF: ${{ inputs.action-proof }}
+        INPUT_PR_PROOF: ${{ inputs.pr-proof }}
+        INPUT_SEMGREP_REPORT: ${{ inputs.semgrep-report }}
+        INPUT_OSV_REPORT: ${{ inputs.osv-report }}
+      run: python "$GITHUB_ACTION_PATH/../../../code/change_consequence_action.py"
+    - if: ${{ inputs.comment-pr == 'true' && github.event_name == 'pull_request' }}
+      shell: bash
+      env:
+        GH_TOKEN: ${{ inputs.github-token }}
+        COMMENT_PATH: ${{ steps.generate.outputs.comment-path }}
+        PR_NUMBER: ${{ github.event.pull_request.number }}
+      run: gh pr comment "$PR_NUMBER" --body-file "$COMMENT_PATH"

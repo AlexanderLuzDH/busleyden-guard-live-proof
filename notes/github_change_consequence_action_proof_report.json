@@ -1,0 +1,90 @@
+{
+  "claim_boundary": "Passing proves the consequence certificate is packaged as a GitHub Action and runs on a public hosted runner. It does not prove paid demand or production rollout.",
+  "digest_verified": true,
+  "external_payload": {
+    "affected_tests": [
+      "tests/test_thing.py"
+    ],
+    "certificate_id": "F20BD63F6AA2D96F7DD3733C2042CEB430739B6268CD599646692DF5A83CE1C5",
+    "comment_headline_present": true,
+    "content_address": "sha256:f20bd63f6aa2d96f7dd3733c2042ceb430739b6268cd599646692df5a83ce1c5",
+    "formal_owner_file_count": 1,
+    "github_change_consequence_action_gate": true,
+    "hosted_trace_speedup": 3821.9354,
+    "hosted_trace_workflow_url": "https://github.com/AlexanderLuzDH/platonic-upstream-pytest-runtime-trace-proof-20260708123501/actions/runs/28942987562",
+    "kind": "github_change_consequence_action_payload",
+    "policy_status": "attention_required",
+    "unknown_count": 3
+  },
+  "github_change_consequence_action_gate": true,
+  "hosted_metrics": {
+    "affected_test_count": 1,
+    "formal_owner_file_count": 1,
+    "hosted_trace_speedup": 3821.9354,
+    "policy_status": "attention_required",
+    "unknown_count": 3
+  },
+  "kind": "github_change_consequence_action_proof_report",
+  "report_id": "8EC2FE064DADA24344DC2AA11B5D3DB59CC672E512907B5C0750ED4FA5865435",
+  "schema_version": 1,
+  "self_criticism": [
+    "The proof uses a small synthetic repository, not a customer repository.",
+    "The PR comment is generated and summarized in the hosted job, but this push-trigger proof does not post to a live pull request.",
+    "Semgrep and OSV are still explicit missing evidence, not fully integrated scans."
+  ],
+  "success_gate": true,
+  "verifier_repo": {
+    "is_private": false,
+    "local_source_dir": "D:\\Projects\\platonic\\temp\\github-change-consequence-action-proof\\platonic-change-consequence-action-proof-20260708142848",
+    "repo_slug": "AlexanderLuzDH/platonic-change-consequence-action-proof-20260708142848",
+    "repo_url": "https://github.com/AlexanderLuzDH/platonic-change-consequence-action-proof-20260708142848",
+    "repo_visibility": "PUBLIC",
+    "source_manifest": [
+      {
+        "byte_count": 4023,
+        "copied_sha256": "4F469CF8A1BC14B15535CA83884BB49ED652EAF4848D126F9479977709165FC2",
+        "path": ".github/actions/change-consequence/action.yml",
+        "source_sha256": "4F469CF8A1BC14B15535CA83884BB49ED652EAF4848D126F9479977709165FC2"
+      },
+      {
+        "byte_count": 4072,
+        "copied_sha256": "4264D43E5659606A1EC1651ED891BBB4B93A91F6DFA40209DCF2A909A8728F54",
+        "path": "code/change_consequence_action.py",
+        "source_sha256": "4264D43E5659606A1EC1651ED891BBB4B93A91F6DFA40209DCF2A909A8728F54"
+      },
+      {
+        "byte_count": 36100,
+        "copied_sha256": "1C2B773DAC1B720587939B75A64212132372AA0CF40F89F1A59134E69FA4CA57",
+        "path": "code/change_consequence_certificate.py",
+        "source_sha256": "1C2B773DAC1B720587939B75A64212132372AA0CF40F89F1A59134E69FA4CA57"
+      },
+      {
+        "byte_count": 591,
+        "copied_sha256": "275A77C5A1EC88A18EB0E3F39D448BAFED0C63EAC641F328D9AAA825AF96D370",
+        "path": "code/platonic_core/hashing.py",
+        "source_sha256": "275A77C5A1EC88A18EB0E3F39D448BAFED0C63EAC641F328D9AAA825AF96D370"
+      },
+      {
+        "byte_count": 10427,
+        "copied_sha256": "8EF41D67E07AB0AAB488292FB205394502CDA9AC0847D1B3330C13A9A635C5EA",
+        "path": "notes/github_upstream_pytest_runtime_trace_fanout_proof_report.json",
+        "source_sha256": "8EF41D67E07AB0AAB488292FB205394502CDA9AC0847D1B3330C13A9A635C5EA"
+      },
+      {
+        "byte_count": 71754,
+        "copied_sha256": "9842BFE95D60631C4E72693BF47A4E89DE184972034425F01446D666EE486CE2",
+        "path": "notes/revolutionary_result_gate_report.json",
+        "source_sha256": "9842BFE95D60631C4E72693BF47A4E89DE184972034425F01446D666EE486CE2"
+      }
+    ],
+    "verifier_commit_sha": "e0ad3907821cdd3162bf72e47cc67547622470bf"
+  },
+  "workflow_run": {
+    "workflow_conclusion": "success",
+    "workflow_event": "push",
+    "workflow_file": "change-consequence-action-proof.yml",
+    "workflow_name": "change-consequence-action-proof",
+    "workflow_run_id": 28950487060,
+    "workflow_run_url": "https://github.com/AlexanderLuzDH/platonic-change-consequence-action-proof-20260708142848/actions/runs/28950487060"
+  }
+}

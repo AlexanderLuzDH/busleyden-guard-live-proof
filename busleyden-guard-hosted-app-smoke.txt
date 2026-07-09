@@ -1,2 +1,3 @@
 Busleyden Guard hosted GitHub App webhook smoke test.
-Triggered after installation, live webhook configuration, and synchronized secret.
+GitHub and Vercel webhook signatures synchronized.
+Final hosted Check Run trigger.

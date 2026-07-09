@@ -1,3 +1,3 @@
 Busleyden Guard hosted GitHub App webhook smoke test.
-GitHub and Vercel webhook signatures synchronized.
-Raw GitHub payload order preserved for signature verification.
+GitHub signature verified from preserved payload bytes.
+Workflow dispatch accepts GitHub's empty 204 response.

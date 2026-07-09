@@ -1,0 +1,158 @@
+name: change-consequence-certificate
+
+on:
+  pull_request:
+  workflow_dispatch:
+    inputs:
+      pull_number:
+        description: "Pull request number, when dispatched by the GitHub App"
+        required: false
+        default: ""
+      base:
+        description: "Base commit SHA"
+        required: false
+        default: ""
+      head:
+        description: "Head commit SHA"
+        required: false
+        default: ""
+      changed_files:
+        description: "Newline-separated changed files"
+        required: false
+        default: ""
+      source:
+        description: "Dispatch source"
+        required: false
+        default: "manual"
+
+permissions:
+  contents: read
+  checks: write
+  issues: write
+  pull-requests: write
+
+jobs:
+  certificate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event_name == 'workflow_dispatch' && inputs.head || github.event.pull_request.head.sha || github.sha }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - uses: actions/setup-go@v5
+        with:
+          go-version: "1.22"
+      - name: Install scanners
+        run: |
+          python -m pip install semgrep
+          go install github.com/google/osv-scanner/v2/cmd/osv-scanner@latest
+          echo "$HOME/go/bin" >> "$GITHUB_PATH"
+      - name: Run Semgrep
+        run: semgrep scan --config auto --json --json-output semgrep.json . || true
+      - name: Run OSV
+        run: osv-scanner scan source -r . --format json > osv.json || true
+      - name: Generate self-contained certificate
+        env:
+          BASE_SHA: ${{ github.event_name == 'workflow_dispatch' && inputs.base || github.event.pull_request.base.sha || '' }}
+          HEAD_SHA: ${{ github.event_name == 'workflow_dispatch' && inputs.head || github.event.pull_request.head.sha || github.sha }}
+          CHANGED_FILES_INPUT: ${{ github.event_name == 'workflow_dispatch' && inputs.changed_files || '' }}
+          PR_NUMBER: ${{ github.event_name == 'workflow_dispatch' && inputs.pull_number || github.event.pull_request.number || '' }}
+          DISPATCH_SOURCE: ${{ github.event_name == 'workflow_dispatch' && inputs.source || 'pull_request' }}
+        run: |
+          python <<'PY'
+          import json
+          import os
+          import subprocess
+          from datetime import datetime, timezone
+          from pathlib import Path
+
+          base = os.environ.get("BASE_SHA", "")
+          head = os.environ.get("HEAD_SHA", "")
+          changed_input = os.environ.get("CHANGED_FILES_INPUT", "")
+          changed_files = [line.strip() for line in changed_input.splitlines() if line.strip()]
+          if not changed_files and base and head:
+              try:
+                  diff = subprocess.check_output(["git", "diff", "--name-only", base, head], text=True)
+                  changed_files = [line.strip() for line in diff.splitlines() if line.strip()]
+              except Exception:
+                  changed_files = []
+
+          tests_changed = [path for path in changed_files if path.startswith("test") or "/test" in path]
+          source_changed = [path for path in changed_files if path not in tests_changed]
+          obligations = []
+          if source_changed and not tests_changed:
+              obligations.append({
+                  "obligation_id": "pilot.changed_source_without_visible_test",
+                  "title": "Source files changed without an obvious test change.",
+                  "acceptable_evidence": [
+                      "Add or link a regression test.",
+                      "Explain why existing tests cover the changed behavior.",
+                      "Record an explicit reviewer exception."
+                  ],
+                  "changed_files": source_changed[:20]
+              })
+
+          now = datetime.now(timezone.utc).isoformat()
+          certificate = {
+              "schema_version": 1,
+              "kind": "busleyden_guard_self_contained_change_certificate",
+              "generated_at": now,
+              "base": base,
+              "head": head,
+              "pull_number": os.environ.get("PR_NUMBER", ""),
+              "dispatch_source": os.environ.get("DISPATCH_SOURCE", ""),
+              "changed_files": changed_files,
+              "changed_file_count": len(changed_files),
+              "scanner_evidence": {
+                  "semgrep_report_present": Path("semgrep.json").exists(),
+                  "osv_report_present": Path("osv.json").exists()
+              },
+              "proof_obligations": obligations,
+              "claim_boundary": "This portable pilot certificate is generated inside the customer repository. It is evidence for review, not an autonomous merge decision."
+          }
+          passport = {
+              "schema_version": 1,
+              "kind": "busleyden_guard_merge_passport",
+              "generated_at": now,
+              "status": "proof_required" if obligations else "standard_review",
+              "merge_allowed_by_default": not obligations,
+              "proof_obligation_count": len(obligations),
+              "required_human_actions": obligations,
+              "claim_boundary": "The merge passport summarizes review obligations. Repository owners keep merge authority."
+          }
+          Path("change-consequence.json").write_text(json.dumps(certificate, indent=2) + "\n", encoding="utf-8")
+          Path("change-merge-passport.json").write_text(json.dumps(passport, indent=2) + "\n", encoding="utf-8")
+          summary = [
+              "# Busleyden Guard change certificate",
+              "",
+              f"- Changed files: {len(changed_files)}",
+              f"- Merge passport: {passport['status']}",
+              f"- Proof obligations: {len(obligations)}",
+              "",
+              "## Reviewer action",
+              "Resolve the listed proof obligations before treating the PR as low risk." if obligations else "Use standard review.",
+          ]
+          Path("change-consequence.md").write_text("\n".join(summary) + "\n", encoding="utf-8")
+          Path("change-merge-passport.md").write_text(
+              f"# Merge passport\n\nStatus: `{passport['status']}`\n\nProof obligations: {len(obligations)}\n",
+              encoding="utf-8",
+          )
+          PY
+      - name: Comment on pull request
+        if: ${{ github.event_name == 'pull_request' || inputs.pull_number != '' }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ github.event_name == 'workflow_dispatch' && inputs.pull_number || github.event.pull_request.number }}
+        run: gh pr comment "$PR_NUMBER" --body-file change-consequence.md || true
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: change-consequence-certificate
+          path: |
+            change-consequence.json
+            change-consequence.md
+            change-merge-passport.json
+            change-merge-passport.md

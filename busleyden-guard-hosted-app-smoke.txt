@@ -1,3 +1,3 @@
 Busleyden Guard hosted GitHub App webhook smoke test.
 GitHub and Vercel webhook signatures synchronized.
-Final hosted Check Run trigger.
+Raw GitHub payload order preserved for signature verification.

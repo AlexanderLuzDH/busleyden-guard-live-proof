@@ -1,4 +1,4 @@
-"""Minimal session token registry used by the Busleyden Guard proof."""
+"""Minimal live session token registry used by the Busleyden Guard proof."""
 
 
 class SessionRegistry:

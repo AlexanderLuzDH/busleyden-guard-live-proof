@@ -6,5 +6,7 @@ class SessionRegistry:
         self._used_tokens: set[str] = set()
 
     def accept(self, token: str) -> bool:
+        if token in self._used_tokens:
+            return False
         self._used_tokens.add(token)
         return True

@@ -38,13 +38,14 @@ Both decisions used engine SHA-256 `9fb8b150812efa7e25cc90e974b1596ab7b5c38b9914
 
 The installed workflow is at [`.github/workflows/change-consequence-certificate.yml`](.github/workflows/change-consequence-certificate.yml).
 
-## Try it on one repository
+## Try it before installing
 
-- [Start the $99 self-service pilot](https://www.busleyden.com/#pricing)
-- [Install the GitHub App](https://github.com/apps/busleyden-guard/installations/new)
+- [Open an install-free preview of this proof PR](https://www.busleyden.com/?pr_url=https%3A%2F%2Fgithub.com%2FAlexanderLuzDH%2Fbusleyden-guard-live-proof%2Fpull%2F3#preview)
+- [Install free on public repositories](https://www.busleyden.com/#pricing)
+- [Start Guard Pro for private repositories](https://www.busleyden.com/#pricing)
 - [Read the security boundary](https://www.busleyden.com/security-review.json)
 
-The founding pilot covers one repository, up to ten real pull requests, and 30 days. No sales call is required.
+Public repositories are free. Guard Pro is $19.90/month for unlimited selected private repositories under one GitHub account. No sales call is required, and billing can be managed through Stripe without contacting support.
 
 ## What Guard does not claim
 

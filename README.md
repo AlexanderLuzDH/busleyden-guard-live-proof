@@ -1,62 +1,55 @@
-<div align="center"><img src="https://raw.githubusercontent.com/pallets/click/refs/heads/stable/docs/_static/click-name.svg" alt="" height="150"></div>
+# Busleyden Guard live proof
 
-# Click
+Busleyden Guard gives a pull request one evidence-based answer: **merge after normal human review, or wait for an exact missing proof**.
 
-Click is a Python package for creating beautiful command line interfaces
-in a composable way with as little code as necessary. It's the "Command
-Line Interface Creation Kit". It's highly configurable but comes with
-sensible defaults out of the box.
+This repository is the public, reproducible product fixture. It is not a mock dashboard.
 
-It aims to make the process of writing command line tools quick and fun
-while also preventing any frustration caused by the inability to
-implement an intended CLI API.
+## See the red-to-green result
 
-Click in three points:
+In [PR #3](https://github.com/AlexanderLuzDH/busleyden-guard-live-proof/pull/3), a change to authentication session handling had:
 
--   Arbitrary nesting of commands
--   Automatic help page generation
--   Supports lazy loading of subcommands at runtime
+- a verified Git diff;
+- a matching CODEOWNER and owner approval;
+- one mapped test;
+- Semgrep results scoped to changed files; and
+- OSV findings separated from an unrelated dependency history.
 
+Guard blocked the change for exactly one reason:
 
-## A Simple Example
+> Prove that a replayed or reused token is rejected.
 
-```python
-import click
+- [Open the blocking GitHub Check](https://github.com/AlexanderLuzDH/busleyden-guard-live-proof/runs/86260113501)
+- [Inspect the one-blocker certificate](https://www.busleyden.com/live-auth-proof-required-certificate.json)
 
-@click.command()
-@click.option("--count", default=1, help="Number of greetings.")
-@click.option("--name", prompt="Your name", help="The person to greet.")
-def hello(count, name):
-    """Simple program that greets NAME for a total of COUNT times."""
-    for _ in range(count):
-        click.echo(f"Hello, {name}!")
+After the mapped replay test was added, the next App-triggered run had zero blockers:
 
-if __name__ == '__main__':
-    hello()
-```
+- [Open the passing GitHub Check](https://github.com/AlexanderLuzDH/busleyden-guard-live-proof/runs/86260496674)
+- [Inspect the zero-blocker certificate](https://www.busleyden.com/live-auth-evidence-satisfied-certificate.json)
 
-```
-$ python hello.py --count=3
-Your name: Click
-Hello, Click!
-Hello, Click!
-Hello, Click!
-```
+Both decisions used engine SHA-256 `9fb8b150812efa7e25cc90e974b1596ab7b5c38b99143da7d88aa92eaba071cc`. Repository owners retained the final merge decision.
 
+## What runs on every PR
 
-## Donate
+1. The GitHub App receives the pull-request webhook.
+2. It dispatches the repository-owned, pinned workflow.
+3. The workflow verifies the exact base/head diff and engine hash.
+4. Guard maps owners, affected tests, risk surfaces, and scanner evidence.
+5. One final GitHub Check and content-addressed certificate record the decision.
 
-The Pallets organization develops and supports Click and other popular
-packages. In order to grow the community of contributors and users, and
-allow the maintainers to devote more time to the projects, [please
-donate today][].
+The installed workflow is at [`.github/workflows/change-consequence-certificate.yml`](.github/workflows/change-consequence-certificate.yml).
 
-[please donate today]: https://palletsprojects.com/donate
+## Try it on one repository
 
-## Contributing
+- [Start the $99 self-service pilot](https://www.busleyden.com/#pricing)
+- [Install the GitHub App](https://github.com/apps/busleyden-guard/installations/new)
+- [Read the security boundary](https://www.busleyden.com/security-review.json)
 
-See our [detailed contributing documentation][contrib] for many ways to
-contribute, including reporting issues, requesting features, asking or answering
-questions, and making PRs.
+The founding pilot covers one repository, up to ten real pull requests, and 30 days. No sales call is required.
 
-[contrib]: https://palletsprojects.com/contributing/
+## What Guard does not claim
+
+Guard verifies available evidence and policy conditions. It does not prove code is bug-free, replace human review, or establish that every repository uses the same test and ownership conventions.
+
+## Fixture provenance
+
+This repository uses source from the [Pallets Click project](https://github.com/pallets/click) as a realistic Python fixture. Click remains under its original BSD license. The Busleyden-specific workflow, authentication fixture, certificates, and proof PRs exist to demonstrate Guard behavior; this repository is not an alternative distribution of Click.

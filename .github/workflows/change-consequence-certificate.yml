@@ -1,158 +1,201 @@
 name: change-consequence-certificate
 
 on:
-  pull_request:
   workflow_dispatch:
     inputs:
       pull_number:
-        description: "Pull request number, when dispatched by the GitHub App"
-        required: false
-        default: ""
+        description: "Pull request number dispatched by Busleyden Guard"
+        required: true
       base:
-        description: "Base commit SHA"
-        required: false
-        default: ""
+        description: "Pull request base commit SHA"
+        required: true
       head:
-        description: "Head commit SHA"
-        required: false
-        default: ""
+        description: "Pull request head commit SHA"
+        required: true
       changed_files:
         description: "Newline-separated changed files"
-        required: false
-        default: ""
+        required: true
       source:
         description: "Dispatch source"
         required: false
-        default: "manual"
+        default: "github_app_webhook"
 
 permissions:
   contents: read
   checks: write
-  issues: write
   pull-requests: write
+
+concurrency:
+  group: busleyden-guard-${{ github.repository }}-${{ inputs.pull_number }}
+  cancel-in-progress: true
 
 jobs:
   certificate:
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     steps:
-      - uses: actions/checkout@v4
+      - name: Check out the exact pull request head
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
         with:
           fetch-depth: 0
-          ref: ${{ github.event_name == 'workflow_dispatch' && inputs.head || github.event.pull_request.head.sha || github.sha }}
-      - uses: actions/setup-python@v5
+          ref: ${{ inputs.head }}
+
+      - name: Set up Python
+        uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
         with:
           python-version: "3.11"
-      - uses: actions/setup-go@v5
+
+      - name: Set up Go
+        uses: actions/setup-go@40f1582b2485089dde7abd97c1529aa768e1baff # v5
         with:
-          go-version: "1.22"
-      - name: Install scanners
-        run: |
-          python -m pip install semgrep
-          go install github.com/google/osv-scanner/v2/cmd/osv-scanner@latest
-          echo "$HOME/go/bin" >> "$GITHUB_PATH"
-      - name: Run Semgrep
-        run: semgrep scan --config auto --json --json-output semgrep.json . || true
-      - name: Run OSV
-        run: osv-scanner scan source -r . --format json > osv.json || true
-      - name: Generate self-contained certificate
+          go-version: "1.24"
+
+      - name: Verify dispatch inputs
+        continue-on-error: true
         env:
-          BASE_SHA: ${{ github.event_name == 'workflow_dispatch' && inputs.base || github.event.pull_request.base.sha || '' }}
-          HEAD_SHA: ${{ github.event_name == 'workflow_dispatch' && inputs.head || github.event.pull_request.head.sha || github.sha }}
-          CHANGED_FILES_INPUT: ${{ github.event_name == 'workflow_dispatch' && inputs.changed_files || '' }}
-          PR_NUMBER: ${{ github.event_name == 'workflow_dispatch' && inputs.pull_number || github.event.pull_request.number || '' }}
-          DISPATCH_SOURCE: ${{ github.event_name == 'workflow_dispatch' && inputs.source || 'pull_request' }}
+          BASE_SHA: ${{ inputs.base }}
+          HEAD_SHA: ${{ inputs.head }}
+          CHANGED_FILES_INPUT: ${{ inputs.changed_files }}
         run: |
-          python <<'PY'
+          printf '%s\n' "$CHANGED_FILES_INPUT" | sed '/^[[:space:]]*$/d' | sort -u > changed-files.txt
+          test -n "$BASE_SHA"
+          test -n "$HEAD_SHA"
+          test -n "$CHANGED_FILES_INPUT"
+          git cat-file -e "$BASE_SHA^{commit}"
+          git cat-file -e "$HEAD_SHA^{commit}"
+
+      - name: Install pinned scanners
+        id: scanner-install
+        continue-on-error: true
+        run: |
+          python -m pip install --disable-pip-version-check "semgrep==1.168.0"
+          go install github.com/google/osv-scanner/v2/cmd/osv-scanner@v2.4.0
+          echo "$HOME/go/bin" >> "$GITHUB_PATH"
+
+      - name: Run Semgrep
+        continue-on-error: true
+        run: semgrep scan --config auto --json --json-output semgrep.json .
+
+      - name: Run OSV-Scanner
+        continue-on-error: true
+        run: osv-scanner scan source -r . --format json > osv.json
+
+      - name: Read pull request approvals
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ inputs.pull_number }}
+        run: |
+          gh api "repos/$GITHUB_REPOSITORY/pulls/$PR_NUMBER/reviews?per_page=100" > reviews.json || printf '[]\n' > reviews.json
+
+      - name: Run hash-verified Guard engine
+        id: guard
+        env:
+          BASE_SHA: ${{ inputs.base }}
+          HEAD_SHA: ${{ inputs.head }}
+          PR_NUMBER: ${{ inputs.pull_number }}
+          ENGINE_SHA256: 9fb8b150812efa7e25cc90e974b1596ab7b5c38b99143da7d88aa92eaba071cc
+        run: |
+          set +e
+          curl --fail --silent --show-error --location \
+            https://www.busleyden.com/guard-engine-v1.py \
+            --output guard-engine-v1.py
+          download_status=$?
+          if [ "$download_status" -eq 0 ]; then
+            printf '%s  %s\n' "$ENGINE_SHA256" guard-engine-v1.py | sha256sum --check --status
+            integrity_status=$?
+          else
+            integrity_status=1
+          fi
+          if [ "$integrity_status" -eq 0 ]; then
+            python guard-engine-v1.py \
+              --repo-root . \
+              --base "$BASE_SHA" \
+              --head "$HEAD_SHA" \
+              --repository "$GITHUB_REPOSITORY" \
+              --pull-number "$PR_NUMBER" \
+              --changed-files-file changed-files.txt \
+              --semgrep-report semgrep.json \
+              --osv-report osv.json \
+              --reviews-report reviews.json \
+              --certificate-output change-consequence.json \
+              --passport-output change-merge-passport.json \
+              --check-output busleyden-check-run.json \
+              --comment-output change-consequence.md
+            engine_status=$?
+          else
+            engine_status=1
+          fi
+          if [ "$engine_status" -ne 0 ]; then
+            python - <<'PY'
           import json
           import os
-          import subprocess
-          from datetime import datetime, timezone
           from pathlib import Path
 
-          base = os.environ.get("BASE_SHA", "")
-          head = os.environ.get("HEAD_SHA", "")
-          changed_input = os.environ.get("CHANGED_FILES_INPUT", "")
-          changed_files = [line.strip() for line in changed_input.splitlines() if line.strip()]
-          if not changed_files and base and head:
-              try:
-                  diff = subprocess.check_output(["git", "diff", "--name-only", base, head], text=True)
-                  changed_files = [line.strip() for line in diff.splitlines() if line.strip()]
-              except Exception:
-                  changed_files = []
-
-          tests_changed = [path for path in changed_files if path.startswith("test") or "/test" in path]
-          source_changed = [path for path in changed_files if path not in tests_changed]
-          obligations = []
-          if source_changed and not tests_changed:
-              obligations.append({
-                  "obligation_id": "pilot.changed_source_without_visible_test",
-                  "title": "Source files changed without an obvious test change.",
-                  "acceptable_evidence": [
-                      "Add or link a regression test.",
-                      "Explain why existing tests cover the changed behavior.",
-                      "Record an explicit reviewer exception."
-                  ],
-                  "changed_files": source_changed[:20]
-              })
-
-          now = datetime.now(timezone.utc).isoformat()
-          certificate = {
-              "schema_version": 1,
-              "kind": "busleyden_guard_self_contained_change_certificate",
-              "generated_at": now,
-              "base": base,
-              "head": head,
-              "pull_number": os.environ.get("PR_NUMBER", ""),
-              "dispatch_source": os.environ.get("DISPATCH_SOURCE", ""),
-              "changed_files": changed_files,
-              "changed_file_count": len(changed_files),
-              "scanner_evidence": {
-                  "semgrep_report_present": Path("semgrep.json").exists(),
-                  "osv_report_present": Path("osv.json").exists()
+          head = os.environ["HEAD_SHA"]
+          check = {
+              "name": "Busleyden Guard",
+              "head_sha": head,
+              "status": "completed",
+              "conclusion": "failure",
+              "output": {
+                  "title": "Guard infrastructure proof required",
+                  "summary": "Guard failed closed because its versioned engine could not be downloaded, integrity-verified, or executed. Rerun the check; do not merge from this result.",
+                  "annotations": [],
               },
-              "proof_obligations": obligations,
-              "claim_boundary": "This portable pilot certificate is generated inside the customer repository. It is evidence for review, not an autonomous merge decision."
           }
-          passport = {
-              "schema_version": 1,
-              "kind": "busleyden_guard_merge_passport",
-              "generated_at": now,
-              "status": "proof_required" if obligations else "standard_review",
-              "merge_allowed_by_default": not obligations,
-              "proof_obligation_count": len(obligations),
-              "required_human_actions": obligations,
-              "claim_boundary": "The merge passport summarizes review obligations. Repository owners keep merge authority."
+          certificate = {
+              "schema_version": 2,
+              "kind": "busleyden_guard_infrastructure_failure",
+              "head": head,
+              "status": "proof_required",
+              "claim_boundary": "No repository consequence decision was produced.",
           }
-          Path("change-consequence.json").write_text(json.dumps(certificate, indent=2) + "\n", encoding="utf-8")
-          Path("change-merge-passport.json").write_text(json.dumps(passport, indent=2) + "\n", encoding="utf-8")
-          summary = [
-              "# Busleyden Guard change certificate",
-              "",
-              f"- Changed files: {len(changed_files)}",
-              f"- Merge passport: {passport['status']}",
-              f"- Proof obligations: {len(obligations)}",
-              "",
-              "## Reviewer action",
-              "Resolve the listed proof obligations before treating the PR as low risk." if obligations else "Use standard review.",
-          ]
-          Path("change-consequence.md").write_text("\n".join(summary) + "\n", encoding="utf-8")
-          Path("change-merge-passport.md").write_text(
-              f"# Merge passport\n\nStatus: `{passport['status']}`\n\nProof obligations: {len(obligations)}\n",
+          Path("busleyden-check-run.json").write_text(json.dumps(check), encoding="utf-8")
+          Path("change-consequence.json").write_text(json.dumps(certificate, indent=2), encoding="utf-8")
+          Path("change-merge-passport.json").write_text(json.dumps({"status": "proof_required"}, indent=2), encoding="utf-8")
+          Path("change-consequence.md").write_text(
+              "<!-- busleyden-guard -->\n# Busleyden Guard\n\nEngine integrity or execution failed. Guard failed closed; do not merge from this result.\n",
               encoding="utf-8",
           )
           PY
-      - name: Comment on pull request
-        if: ${{ github.event_name == 'pull_request' || inputs.pull_number != '' }}
+          fi
+          printf 'engine_status=%s\n' "$engine_status" >> "$GITHUB_OUTPUT"
+
+      - name: Publish final Busleyden Guard Check Run
         env:
           GH_TOKEN: ${{ github.token }}
-          PR_NUMBER: ${{ github.event_name == 'workflow_dispatch' && inputs.pull_number || github.event.pull_request.number }}
-        run: gh pr comment "$PR_NUMBER" --body-file change-consequence.md || true
-      - uses: actions/upload-artifact@v4
+        run: gh api "repos/$GITHUB_REPOSITORY/check-runs" --method POST --input busleyden-check-run.json
+
+      - name: Publish or update the Guard pull request comment
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ inputs.pull_number }}
+        run: |
+          if ! grep -q '<!-- busleyden-guard -->' change-consequence.md; then
+            printf '%s\n' '<!-- busleyden-guard -->' | cat - change-consequence.md > change-consequence.tmp
+            mv change-consequence.tmp change-consequence.md
+          fi
+          comment_id=$(gh api "repos/$GITHUB_REPOSITORY/issues/$PR_NUMBER/comments" \
+            --jq '.[] | select(.body | contains("<!-- busleyden-guard -->")) | .id' | head -n 1)
+          jq -Rs '{body: .}' change-consequence.md > comment-request.json
+          if [ -n "$comment_id" ]; then
+            gh api "repos/$GITHUB_REPOSITORY/issues/comments/$comment_id" --method PATCH --input comment-request.json
+          else
+            gh api "repos/$GITHUB_REPOSITORY/issues/$PR_NUMBER/comments" --method POST --input comment-request.json
+          fi
+
+      - name: Upload consequence evidence
         if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
-          name: change-consequence-certificate
+          name: busleyden-guard-${{ inputs.pull_number }}-${{ inputs.head }}
+          retention-days: 30
+          if-no-files-found: error
           path: |
             change-consequence.json
             change-consequence.md
             change-merge-passport.json
-            change-merge-passport.md
+            busleyden-check-run.json
+            semgrep.json
+            osv.json
+            reviews.json

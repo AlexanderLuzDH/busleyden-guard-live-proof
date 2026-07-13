@@ -1,0 +1,64 @@
+name: Enroll in the free Guard beta
+description: Evaluate Busleyden Guard on a public Python repository without a card, call, or automatic conversion.
+title: "Beta: "
+labels:
+  - beta
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for pressure-testing Guard. This issue is the public evaluation record. Do not include secrets, private code, or undisclosed vulnerability details.
+  - type: input
+    id: repository
+    attributes:
+      label: Public repository URL
+      placeholder: https://github.com/owner/repository
+    validations:
+      required: true
+  - type: dropdown
+    id: role
+    attributes:
+      label: Your relationship to the repository
+      options:
+        - Owner or maintainer
+        - Contributor authorized by a maintainer
+    validations:
+      required: true
+  - type: checkboxes
+    id: fit
+    attributes:
+      label: Beta fit
+      options:
+        - label: The repository is public and primarily uses Python.
+          required: true
+        - label: I am allowed to install or propose the GitHub App and setup workflow.
+          required: true
+        - label: I understand this is experimental software and maintainers retain every merge decision.
+          required: true
+        - label: I understand there is no card, sales call, support SLA, or automatic paid conversion.
+          required: true
+  - type: textarea
+    id: context
+    attributes:
+      label: Review context
+      description: What kinds of pull requests or risks would make Guard useful here?
+      placeholder: Authentication and dependency changes are reviewed frequently...
+    validations:
+      required: true
+  - type: textarea
+    id: results
+    attributes:
+      label: Results log
+      description: After installation, add public PR links and label each result Useful, Noisy, or Missed something. Say whether it changed a review decision.
+      placeholder: |
+        owner/repo#123 — Useful — changed decision: yes — found a missing replay test
+        owner/repo#124 — Noisy — changed decision: no — blocker was already covered
+    validations:
+      required: false
+  - type: checkboxes
+    id: reporting
+    attributes:
+      label: Public evidence
+      options:
+        - label: I agree that the repository URL and feedback posted here may be summarized as public beta evidence.
+          required: true

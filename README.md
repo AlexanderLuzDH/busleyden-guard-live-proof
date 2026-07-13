@@ -19,12 +19,12 @@ Guard blocked the change for exactly one reason:
 > Prove that a replayed or reused token is rejected.
 
 - [Open the blocking GitHub Check](https://github.com/AlexanderLuzDH/busleyden-guard-live-proof/runs/86260113501)
-- [Inspect the one-blocker certificate](https://www.busleyden.com/live-auth-proof-required-certificate.json)
+- [Inspect the one-blocker certificate](https://guard.busleyden.com/live-auth-proof-required-certificate.json)
 
 After the mapped replay test was added, the next App-triggered run had zero blockers:
 
 - [Open the passing GitHub Check](https://github.com/AlexanderLuzDH/busleyden-guard-live-proof/runs/86260496674)
-- [Inspect the zero-blocker certificate](https://www.busleyden.com/live-auth-evidence-satisfied-certificate.json)
+- [Inspect the zero-blocker certificate](https://guard.busleyden.com/live-auth-evidence-satisfied-certificate.json)
 
 Both decisions used engine SHA-256 `9fb8b150812efa7e25cc90e974b1596ab7b5c38b99143da7d88aa92eaba071cc`. Repository owners retained the final merge decision.
 
@@ -40,12 +40,12 @@ The installed workflow is at [`.github/workflows/change-consequence-certificate.
 
 ## Try it before installing
 
-- [Open an install-free preview of this proof PR](https://www.busleyden.com/?pr_url=https%3A%2F%2Fgithub.com%2FAlexanderLuzDH%2Fbusleyden-guard-live-proof%2Fpull%2F3#preview)
-- [Install free on public repositories](https://www.busleyden.com/#pricing)
-- [Start Guard Pro for private repositories](https://www.busleyden.com/#pricing)
-- [Read the security boundary](https://www.busleyden.com/security-review.json)
+- [Open an install-free preview of this proof PR](https://guard.busleyden.com/?pr_url=https%3A%2F%2Fgithub.com%2FAlexanderLuzDH%2Fbusleyden-guard-live-proof%2Fpull%2F3#preview)
+- [Install free on public repositories](https://guard.busleyden.com/#pricing)
+- [Enroll in the public beta](https://github.com/AlexanderLuzDH/busleyden-guard-live-proof/issues/new?template=beta.yml)
+- [Read the security boundary](https://guard.busleyden.com/security-review.json)
 
-Public repositories are free. Guard Pro is $19.90/month for unlimited selected private repositories under one GitHub account. No sales call is required, and billing can be managed through Stripe without contacting support.
+Public repositories are free. Paid checkout is closed while Guard is evaluated on independent repositories. The [public beta protocol](BETA.md) defines the evidence required before a paid launch; there is no card, sales call, or automatic conversion.
 
 ## What Guard does not claim
 

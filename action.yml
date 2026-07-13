@@ -1,0 +1,77 @@
+name: "Busleyden Guard Consequence Check"
+description: "Map changed owners, tests, risk surfaces, and missing merge evidence for a pull request."
+author: "Busleyden"
+branding:
+  icon: "shield"
+  color: "purple"
+inputs:
+  repo-root:
+    description: "Repository root to analyze."
+    required: false
+    default: "${{ github.workspace }}"
+  base:
+    description: "Base ref for the pull-request diff."
+    required: false
+    default: ""
+  head:
+    description: "Head ref for the pull-request diff."
+    required: false
+    default: ""
+  output:
+    description: "Path for the JSON evidence report."
+    required: false
+    default: "change-consequence.json"
+  comment-output:
+    description: "Path for the reviewer-facing Markdown summary."
+    required: false
+    default: "change-consequence.md"
+  semgrep-report:
+    description: "Optional Semgrep JSON or SARIF report."
+    required: false
+    default: ""
+  osv-report:
+    description: "Optional OSV-Scanner JSON report."
+    required: false
+    default: ""
+  comment-pr:
+    description: "Post the generated summary to the pull request."
+    required: false
+    default: "false"
+  github-token:
+    description: "Token used only when comment-pr is true."
+    required: false
+    default: "${{ github.token }}"
+outputs:
+  certificate-id:
+    description: "Stable certificate digest."
+    value: "${{ steps.generate.outputs.certificate-id }}"
+  policy-status:
+    description: "Computed evidence-policy status."
+    value: "${{ steps.generate.outputs.policy-status }}"
+  report-path:
+    description: "Generated JSON report path."
+    value: "${{ steps.generate.outputs.report-path }}"
+  comment-path:
+    description: "Generated Markdown summary path."
+    value: "${{ steps.generate.outputs.comment-path }}"
+runs:
+  using: "composite"
+  steps:
+    - id: generate
+      shell: bash
+      env:
+        INPUT_REPO_ROOT: "${{ inputs.repo-root }}"
+        INPUT_BASE: "${{ inputs.base }}"
+        INPUT_HEAD: "${{ inputs.head }}"
+        INPUT_OUTPUT: "${{ inputs.output }}"
+        INPUT_COMMENT_OUTPUT: "${{ inputs.comment-output }}"
+        INPUT_SEMGREP_REPORT: "${{ inputs.semgrep-report }}"
+        INPUT_OSV_REPORT: "${{ inputs.osv-report }}"
+      run: python "$GITHUB_ACTION_PATH/code/change_consequence_action.py"
+    - if: "${{ inputs.comment-pr == 'true' && github.event_name == 'pull_request' }}"
+      shell: bash
+      env:
+        GH_TOKEN: "${{ inputs.github-token }}"
+        COMMENT_PATH: "${{ steps.generate.outputs.comment-path }}"
+        PR_NUMBER: "${{ github.event.pull_request.number }}"
+      run: gh pr comment "$PR_NUMBER" --body-file "$COMMENT_PATH"

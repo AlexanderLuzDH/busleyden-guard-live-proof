@@ -47,6 +47,26 @@ The installed workflow is at [`.github/workflows/change-consequence-certificate.
 
 Public repositories are free. Paid checkout is closed while Guard is evaluated on independent repositories. The [public beta protocol](BETA.md) defines the evidence required before a paid launch; there is no card, sales call, or automatic conversion.
 
+## Run it as a GitHub Action
+
+Maintainers who do not want to install a GitHub App can pin the standalone Action in an existing pull-request workflow:
+
+```yaml
+permissions:
+  contents: read
+
+steps:
+  - uses: actions/checkout@v4
+    with:
+      fetch-depth: 0
+  - uses: AlexanderLuzDH/busleyden-guard-live-proof@v1
+    with:
+      base: ${{ github.event.pull_request.base.sha }}
+      head: ${{ github.event.pull_request.head.sha }}
+```
+
+The default mode writes local JSON and Markdown artifacts and does not post a PR comment. Pinning a full commit SHA is recommended for repositories that require immutable third-party dependencies.
+
 ## What Guard does not claim
 
 Guard verifies available evidence and policy conditions. It does not prove code is bug-free, replace human review, or establish that every repository uses the same test and ownership conventions.

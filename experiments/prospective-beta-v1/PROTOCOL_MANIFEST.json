@@ -16,7 +16,7 @@
     },
     {
       "path": ".github/workflows/prospective-beta-validate.yml",
-      "sha256": "f59325b84dfffae8a59b7ad2ef720682cc3e67e9a2617ba712a62c07931e10d5"
+      "sha256": "42822c53f34e5fad234f46bcabd2e7549127ca4e327d17dcf23249a63ac9e50f"
     },
     {
       "path": "experiments/prospective-beta-v1/PREREGISTRATION.md",

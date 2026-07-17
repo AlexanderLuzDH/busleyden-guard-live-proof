@@ -1,0 +1,35 @@
+{
+  "bugsinpy_commit": "11c5f1eea954a42132cfd06bf257766a7963e0fd",
+  "claim_boundary": "Aggregate seed from preserved 495-case CI artifact; final 500-case run must add omitted HTTPie records and retain both artifacts.",
+  "covered_cases": 495,
+  "covered_projects": [
+    "PySnooper", "ansible", "black", "cookiecutter", "fastapi", "keras", "luigi", "matplotlib", "pandas", "sanic", "scrapy", "spacy", "thefuck", "tornado", "tqdm", "youtube-dl"
+  ],
+  "fields": [
+    "relevant_test_added", "relevant_test_modified", "relevant_test_changed", "relevant_test_unchanged_proxy", "any_test_changed", "unrelated_test_change_only", "same_stem_discoverable", "candidate_path_discoverable"
+  ],
+  "kind": "autonomous_assurance_upstream_commit_audit_seed",
+  "project_counts": {
+    "PySnooper": {"total": 3, "relevant_test_added": 1, "relevant_test_modified": 2, "relevant_test_changed": 3, "relevant_test_unchanged_proxy": 0, "any_test_changed": 3, "unrelated_test_change_only": 0, "same_stem_discoverable": 1, "candidate_path_discoverable": 1},
+    "ansible": {"total": 18, "relevant_test_added": 3, "relevant_test_modified": 15, "relevant_test_changed": 18, "relevant_test_unchanged_proxy": 0, "any_test_changed": 18, "unrelated_test_change_only": 0, "same_stem_discoverable": 16, "candidate_path_discoverable": 0},
+    "black": {"total": 23, "relevant_test_added": 11, "relevant_test_modified": 23, "relevant_test_changed": 23, "relevant_test_unchanged_proxy": 0, "any_test_changed": 23, "unrelated_test_change_only": 0, "same_stem_discoverable": 21, "candidate_path_discoverable": 21},
+    "cookiecutter": {"total": 4, "relevant_test_added": 0, "relevant_test_modified": 4, "relevant_test_changed": 4, "relevant_test_unchanged_proxy": 0, "any_test_changed": 4, "unrelated_test_change_only": 0, "same_stem_discoverable": 3, "candidate_path_discoverable": 2},
+    "fastapi": {"total": 16, "relevant_test_added": 11, "relevant_test_modified": 5, "relevant_test_changed": 16, "relevant_test_unchanged_proxy": 0, "any_test_changed": 16, "unrelated_test_change_only": 0, "same_stem_discoverable": 1, "candidate_path_discoverable": 0},
+    "keras": {"total": 44, "relevant_test_added": 0, "relevant_test_modified": 44, "relevant_test_changed": 44, "relevant_test_unchanged_proxy": 0, "any_test_changed": 44, "unrelated_test_change_only": 0, "same_stem_discoverable": 29, "candidate_path_discoverable": 0},
+    "luigi": {"total": 33, "relevant_test_added": 3, "relevant_test_modified": 30, "relevant_test_changed": 33, "relevant_test_unchanged_proxy": 0, "any_test_changed": 33, "unrelated_test_change_only": 0, "same_stem_discoverable": 20, "candidate_path_discoverable": 0},
+    "matplotlib": {"total": 30, "relevant_test_added": 0, "relevant_test_modified": 30, "relevant_test_changed": 30, "relevant_test_unchanged_proxy": 0, "any_test_changed": 30, "unrelated_test_change_only": 0, "same_stem_discoverable": 9, "candidate_path_discoverable": 0},
+    "pandas": {"total": 169, "relevant_test_added": 3, "relevant_test_modified": 166, "relevant_test_changed": 169, "relevant_test_unchanged_proxy": 0, "any_test_changed": 169, "unrelated_test_change_only": 0, "same_stem_discoverable": 46, "candidate_path_discoverable": 0},
+    "sanic": {"total": 5, "relevant_test_added": 1, "relevant_test_modified": 4, "relevant_test_changed": 5, "relevant_test_unchanged_proxy": 0, "any_test_changed": 5, "unrelated_test_change_only": 0, "same_stem_discoverable": 2, "candidate_path_discoverable": 0},
+    "scrapy": {"total": 40, "relevant_test_added": 0, "relevant_test_modified": 40, "relevant_test_changed": 40, "relevant_test_unchanged_proxy": 0, "any_test_changed": 40, "unrelated_test_change_only": 0, "same_stem_discoverable": 28, "candidate_path_discoverable": 9},
+    "spacy": {"total": 10, "relevant_test_added": 5, "relevant_test_modified": 5, "relevant_test_changed": 10, "relevant_test_unchanged_proxy": 0, "any_test_changed": 10, "unrelated_test_change_only": 0, "same_stem_discoverable": 2, "candidate_path_discoverable": 0},
+    "thefuck": {"total": 32, "relevant_test_added": 1, "relevant_test_modified": 31, "relevant_test_changed": 32, "relevant_test_unchanged_proxy": 0, "any_test_changed": 32, "unrelated_test_change_only": 0, "same_stem_discoverable": 32, "candidate_path_discoverable": 5},
+    "tornado": {"total": 16, "relevant_test_added": 1, "relevant_test_modified": 15, "relevant_test_changed": 16, "relevant_test_unchanged_proxy": 0, "any_test_changed": 16, "unrelated_test_change_only": 0, "same_stem_discoverable": 14, "candidate_path_discoverable": 0},
+    "tqdm": {"total": 9, "relevant_test_added": 0, "relevant_test_modified": 9, "relevant_test_changed": 9, "relevant_test_unchanged_proxy": 0, "any_test_changed": 9, "unrelated_test_change_only": 0, "same_stem_discoverable": 6, "candidate_path_discoverable": 0},
+    "youtube-dl": {"total": 43, "relevant_test_added": 0, "relevant_test_modified": 43, "relevant_test_changed": 43, "relevant_test_unchanged_proxy": 0, "any_test_changed": 43, "unrelated_test_change_only": 0, "same_stem_discoverable": 39, "candidate_path_discoverable": 38}
+  },
+  "schema_version": 1,
+  "source_artifact_digest": "sha256:617057e6cbba88b2729bc917370259f42172e5c0fb8da00f25de8feb376aba6b",
+  "source_artifact_id": 8396522192,
+  "source_head_sha": "28d4c62e498ea68c92609444f700cde2ad35af47",
+  "source_run_id": 29553292522
+}

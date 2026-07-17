@@ -1,41 +1,92 @@
-# Busleyden Guard public beta
+# Busleyden Guard prospective public beta
 
-The paid launch is closed. This beta exists to determine whether Guard is genuinely useful on real pull requests before anyone is asked to pay.
+The paid launch is closed. This beta exists to determine whether Guard genuinely improves real pull-request review decisions before anyone is asked to pay.
 
-## Who can participate
+The former retrospective `Useful / Noisy / Missed something` log is not sufficient to estimate actionable precision, missed-risk recall, or causal decision changes. The beta now uses a preregistered prospective trial with concealed assignment and blinded probability audits.
 
-Maintainers of public Python repositories can participate without a card, contract, call, or meeting. Install Guard on one selected repository, review and merge its setup pull request, then leave it running for up to two weeks.
+## Enroll before the PRs exist
 
-[Enroll a public repository](https://github.com/AlexanderLuzDH/busleyden-guard-live-proof/issues/new?template=beta.yml)
+Maintainers of public Python repositories can participate without a card, contract, call, or meeting.
 
-## What to report
+1. Read the [prospective trial preregistration](experiments/prospective-beta-v1/PREREGISTRATION.md).
+2. [Open an enrollment issue](https://github.com/AlexanderLuzDH/busleyden-guard-live-proof/issues/new?template=beta.yml) before the first eligible PR.
+3. Freeze repository-specific eligibility and dependency-PR policy.
+4. Install or run Guard in non-blocking experimental mode.
+5. Allow future eligible PRs to enter the assignment ledger in creation order.
 
-For each evaluated pull request, add one row to the enrollment issue:
+There is no automatic conversion to a paid plan.
 
-| Pull request | Useful, noisy, or missed something | Changed the review decision? | What should improve? |
-|---|---|---|---|
-| `owner/repo#123` | Useful | Yes | The missing replay test was actionable. |
+## What is randomized
 
-Do not paste private code, secrets, vulnerability details, or personal information. Public pull-request URLs and maintainer-authored summaries are enough.
+Each repository uses concealed blocks of eight PRs, with two allocations to each arm:
 
-## Release gate
+| Arm | Presentation |
+|---|---|
+| `control_delayed` | Guard runs silently and is shown only after the final review decision is recorded. |
+| `evidence_only` | Reviewer records a baseline, then sees extracted evidence states but no obligations. |
+| `obligation_first` | Reviewer sees Guard obligations immediately, without a purported pre-exposure baseline. |
+| `baseline_then_guard` | Reviewer records a decision, confidence, risks, and evidence already seen before Guard appears. |
 
-Paid checkout stays closed until all of these conditions are met:
+Normal CI, security checks, and human authority remain active in every arm.
 
-- 5 independently maintained public Python repositories complete an installation;
-- at least 50 real pull-request results receive a maintainer label;
-- useful-result precision and missed-risk recall are reported separately, with the sampling method published;
-- nuisance blockers are measured and the remaining failure modes are disclosed;
-- at least 3 maintainers independently confirm that Guard improved a real review decision;
-- the checkout, cancellation, entitlement, and private-repository paths pass an end-to-end payment test; and
-- the website, App permissions, security boundary, and install documentation agree.
+## What is measured
 
-Meeting the gate permits a paid launch; it does not prove that Guard is bug-free or universally useful.
+The primary outcomes are:
+
+- actionable-new obligation precision;
+- correct-obligation precision;
+- independently audited missed-risk recall;
+- final decision accuracy against blinded adjudication;
+- decision corrections and regressions;
+- missingness and treatment-fidelity failures.
+
+Review time and subjective feedback remain secondary outcomes.
+
+## Why no-alert PRs are audited
+
+Guard cannot estimate recall from alerts alone. A concealed probability sample audits:
+
+- 25% of alerting PRs;
+- 50% of no-alert PRs.
+
+The primary audit is selected before reviewer outcome and is blinded to trial arm, Guard output, baseline, and reviewer decision during stage 1.
+
+## Minimum trial horizon
+
+The main analysis waits for the end of the first complete repository block after all of these are true:
+
+- at least 80 eligible PRs;
+- at least 5 independently maintained repositories;
+- at least 18 PRs in each arm;
+- at least 24 completed primary audits;
+- at least 10 completed no-alert audits;
+- at least 50 adjudicated Guard obligations, unless fewer were emitted across the horizon.
+
+There is no efficacy stopping based on interim results. Interim checks are limited to data integrity, missingness, treatment fidelity, and safety.
+
+## Paid-launch evidence gate
+
+Paid checkout stays closed unless the data-minimum conditions above are met and:
+
+- actionable-new precision has a 90% lower bound of at least 0.50;
+- audited missed-risk recall has a 90% lower bound of at least 0.40;
+- `baseline_then_guard` decision regression has a 90% upper bound of at most 0.10;
+- `baseline_then_guard` final accuracy is not more than 0.05 below delayed control by point estimate;
+- reviewer-outcome missingness is at most 15%;
+- at least 3 independent repositories contain an adjudicated decision correction associated with Guard;
+- nuisance obligations, systematic misses, safety overrides, and remaining failure modes are disclosed;
+- checkout, cancellation, entitlement, private-repository, website, App-permission, security-boundary, and install surfaces agree.
+
+Meeting the gate permits consideration of a paid launch. It does not prove that Guard is bug-free, universally useful, or a substitute for human review.
+
+## Public records
+
+Machine records follow the [versioned trial schema](experiments/prospective-beta-v1/trial-record.schema.json) and are checked by the [trial validator](experiments/prospective-beta-v1/validate.py). Do not place private code, secrets, personal information, or undisclosed vulnerability details in records or issues.
 
 ## Current evidence
 
-The repository's red-to-green fixture proves that the product can produce and clear one targeted blocker. It is controlled product evidence, not independent customer validation. Independent beta progress will be linked from enrollment issues so the evidence remains attributable and auditable.
+The repository's red-to-green authentication fixture shows that Guard can produce and clear one targeted blocker. It is controlled product evidence, not independent customer validation. Existing install-free preview comments remain examples, not trial outcomes.
 
 ## Removal
 
-Participants can uninstall the GitHub App and remove `.github/workflows/change-consequence-certificate.yml` at any time. There is no automatic conversion to a paid plan.
+Participants can uninstall the GitHub App and remove the workflow at any time. Withdrawal stops future assignment; prior eligible records remain in the intention-to-treat ledger with withdrawal or missingness recorded.

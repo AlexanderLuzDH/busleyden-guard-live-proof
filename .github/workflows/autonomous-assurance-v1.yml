@@ -35,18 +35,17 @@ jobs:
           test "$(git -C /tmp/BugsInPy rev-parse HEAD)" = "11c5f1eea954a42132cfd06bf257766a7963e0fd"
       - name: Run laboratory unit tests
         run: python -m unittest discover -s experiments/autonomous-assurance-v1/tests -v
-      - name: Finalize 500-case audit from immutable seed and five missing cases
-        env:
-          GH_TOKEN: ${{ github.token }}
+      - name: Finalize 500-case audit from immutable seed and five public HTTPie reads
         run: |
           mkdir -p results/static
-          python experiments/autonomous-assurance-v1/finalize_seeded_static.py /tmp/BugsInPy \
+          python experiments/autonomous-assurance-v1/run_final_static.py /tmp/BugsInPy \
             --json-output results/static/bugsinpy-static.json \
             --markdown-output results/static/bugsinpy-static.md \
             --csv-output results/static/httpie-new-cases.csv
           cp experiments/autonomous-assurance-v1/PREREGISTRATION.md results/static/
           cp experiments/autonomous-assurance-v1/AMENDMENT-001.md results/static/
           cp experiments/autonomous-assurance-v1/AMENDMENT-002.md results/static/
+          cp experiments/autonomous-assurance-v1/AMENDMENT-003.md results/static/
           cp experiments/autonomous-assurance-v1/seed-495-project-counts.json results/static/
           git -C /tmp/BugsInPy rev-parse HEAD > results/static/bugsinpy-commit.txt
       - uses: actions/upload-artifact@v4

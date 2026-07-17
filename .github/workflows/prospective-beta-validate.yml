@@ -55,3 +55,22 @@ jobs:
             --markdown-output /tmp/beta-analysis.md
       - name: Verify frozen protocol manifest
         run: python experiments/prospective-beta-v1/verify_protocol_manifest.py
+      - name: Package the reviewed source
+        if: matrix.python-version == '3.13'
+        run: |
+          zip -q -r /tmp/busleyden-prospective-beta-trial-v1.zip \
+            README.md \
+            BETA.md \
+            .github/ISSUE_TEMPLATE/beta.yml \
+            .github/workflows/prospective-beta-validate.yml \
+            .github/workflows/change-consequence-real-repo-pr-proof.yml \
+            experiments/prospective-beta-v1 \
+            -x '**/__pycache__/**' '**/*.pyc'
+      - name: Upload reviewed source bundle
+        if: matrix.python-version == '3.13'
+        uses: actions/upload-artifact@v4
+        with:
+          name: busleyden-prospective-beta-trial-v1-source
+          path: /tmp/busleyden-prospective-beta-trial-v1.zip
+          if-no-files-found: error
+          retention-days: 90

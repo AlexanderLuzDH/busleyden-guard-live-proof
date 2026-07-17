@@ -9,6 +9,10 @@ A history-grounded experiment that does not require maintainer enrollment or fee
 - `tests/test_lab.py` validates parsers, path classification, and mutation application.
 - `PREREGISTRATION.md` freezes hypotheses, denominators, and course-change rules before the full corpus is inspected.
 
+## Benchmark provenance
+
+The static outcome corpus is the public `soarsmu/BugsInPy` repository. The executable pilot uses upstream `cool-RR/PySnooper` commits named in BugsInPy bug records. Workflow artifacts retain the exact BugsInPy commit and complete case outputs.
+
 ## Local static run
 
 ```bash

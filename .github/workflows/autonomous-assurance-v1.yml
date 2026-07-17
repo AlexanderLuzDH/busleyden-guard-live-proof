@@ -1,6 +1,10 @@
 name: autonomous-assurance-lab-v1
 
 on:
+  pull_request:
+    paths:
+      - ".github/workflows/autonomous-assurance-v1.yml"
+      - "experiments/autonomous-assurance-v1/**"
   push:
     branches:
       - agent/autonomous-assurance-lab-v1

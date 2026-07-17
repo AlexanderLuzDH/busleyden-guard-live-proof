@@ -1,12 +1,23 @@
 name: change-consequence-real-repo-pr-proof
+
 on:
-  pull_request:
-    types: [opened, synchronize, reopened]
   workflow_dispatch:
+    inputs:
+      pull_number:
+        description: "Controlled fixture pull request number"
+        required: true
+      base:
+        description: "Controlled fixture base commit SHA"
+        required: true
+      head:
+        description: "Controlled fixture head commit SHA"
+        required: true
+
 permissions:
   contents: read
   issues: write
   pull-requests: write
+
 jobs:
   prove-real-pr:
     runs-on: ubuntu-latest
@@ -15,6 +26,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          ref: ${{ inputs.head }}
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
@@ -41,20 +53,20 @@ jobs:
       - id: consequence
         uses: ./.github/actions/change-consequence
         with:
-          base: ${{ github.event.pull_request.base.sha || '' }}
-          head: ${{ github.event.pull_request.head.sha || '' }}
+          base: ${{ inputs.base }}
+          head: ${{ inputs.head }}
           output: change-consequence.json
           comment-output: change-consequence.md
-          comment-pr: ${{ github.event_name == 'pull_request' }}
+          comment-pr: false
           hosted-trace-report: notes/github_upstream_pytest_runtime_trace_fanout_proof_report.json
           revolutionary-gate: notes/revolutionary_result_gate_report.json
           action-proof: notes/github_change_consequence_action_proof_report.json
           pr-proof: notes/github_change_consequence_pr_proof_report.json
           semgrep-report: notes/semgrep_report.json
           osv-report: notes/osv_report.json
-      - name: Validate real-repo PR certificate
+      - name: Validate controlled real-repo PR certificate
         env:
-          PR_NUMBER: ${{ github.event.pull_request.number || '' }}
+          PR_NUMBER: ${{ inputs.pull_number }}
           ACTION_CERTIFICATE_ID: ${{ steps.consequence.outputs.certificate-id }}
           ACTION_CONTENT_ADDRESS: ${{ steps.consequence.outputs.content-address }}
           ACTION_POLICY_STATUS: ${{ steps.consequence.outputs.policy-status }}

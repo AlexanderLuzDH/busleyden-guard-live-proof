@@ -36,7 +36,7 @@
     },
     {
       "path": "experiments/prospective-beta-v1/_trial_core.py",
-      "sha256": "e7143dcdef8f3aa84f4bbf2b327403200f84a2da3696fc2dc79009d9a8a62f1c"
+      "sha256": "db92b9285d7bab5ffe904ac0583b383fd4847104bd806a74b053f759d6c3eff2"
     },
     {
       "path": "experiments/prospective-beta-v1/_trial_validate_base.py",
